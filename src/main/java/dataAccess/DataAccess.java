@@ -517,6 +517,14 @@ public class DataAccess {
 		}
 	}
 
+	/**
+	 * This method books a ride for a traveler
+	 * @param username username of the traveler
+	 * @param ride ride to book
+	 * @param seats number of seats to book
+	 * @param desk discount to apply
+	 * @return true if the booking is successful, false otherwise
+	 */
 	public boolean bookRide(String username, Ride ride, int seats, double desk) {
 		try {
 			db.getTransaction().begin();
