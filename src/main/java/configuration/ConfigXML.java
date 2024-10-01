@@ -108,7 +108,7 @@ public class ConfigXML {
 			  
 				//Two possible values: true (if the database must be initialized ) or false (in other case)
 			  String dbOpenValue= ((Element)config.getElementsByTagName("database").item(0)).getAttribute("initialize");
-			  isDatabaseInitialized= dbOpenValue.equals("true");;
+			  isDatabaseInitialized= dbOpenValue.equals("true");
 
 	
 			  databaseNode = getTagValue("databaseNode", config);
