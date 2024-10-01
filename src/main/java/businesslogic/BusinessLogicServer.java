@@ -23,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.logging.Logger;
 
 /**
  * It runs the business logic server as a separate process.
@@ -37,6 +38,8 @@ public class BusinessLogicServer extends JDialog {
 	JTextArea textArea;
 	transient BLFacade server;
 	String service;
+    private static final Logger logger = Logger.getLogger(BusinessLogicServer.class.getName());
+
 
 	public static void main(String[] args) {
 		try {
@@ -103,9 +106,10 @@ public class BusinessLogicServer extends JDialog {
 			try{
 				
 				if (!c.isDatabaseLocal()) {
-					System.out.println("\nWARNING: Please be sure ObjectdbManagerServer is launched\n           in machine: "+c.getDatabaseNode()+" port: "+c.getDatabasePort()+"\n");	
+					 logger.warning("WARNING: Please be sure ObjectdbManagerServer is launched\n" +
+                             "           in machine: " + c.getDatabaseNode() + 
+                             " port: " + c.getDatabasePort() + "\n");
 				}
-				
 				service= "http://"+c.getBusinessLogicNode() +":"+ c.getBusinessLogicPort()+"/ws/"+c.getBusinessLogicName();
 				
 				Endpoint.publish(service, new BLFacadeImplementation());
