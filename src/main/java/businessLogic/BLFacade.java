@@ -26,7 +26,7 @@ import javax.jws.WebService;
  * Interface that specifies the business logic.
  */
 @WebService
-public interface BLFacade {
+public interface BLFacade{
 
 	/**
 	 * This method returns all the cities where rides depart
