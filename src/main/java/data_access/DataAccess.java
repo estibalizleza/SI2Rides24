@@ -32,7 +32,7 @@ import java.nio.file.Paths;
 public class DataAccess {
 	private EntityManager db;
 	private EntityManagerFactory emf;
-
+	public static final String DONOSTIA = "Donostia";
 	ConfigXML c = ConfigXML.getInstance();
 	
 	private String adminPass="admin";
@@ -127,11 +127,11 @@ public class DataAccess {
 			Date date4 = UtilDate.trim(cal.getTime());
 			
 			String madrid= "Madrid";
-			driver1.addRide("Donostia", madrid, date2, 5, 20); //ride1
-			driver1.addRide("Irun", "Donostia", date2, 5, 2); //ride2
-			driver1.addRide(madrid, "Donostia", date3, 5, 5); //ride3
+			driver1.addRide(DONOSTIA, madrid, date2, 5, 20); //ride1
+			driver1.addRide("Irun", DONOSTIA, date2, 5, 2); //ride2
+			driver1.addRide(madrid, DONOSTIA, date3, 5, 5); //ride3
 			driver1.addRide("Barcelona", madrid, date4, 0, 10); //ride4
-			driver2.addRide("Donostia", "Hondarribi", date1, 5, 3); //ride5
+			driver2.addRide(DONOSTIA, "Hondarribi", date1, 5, 3); //ride5
 
 			Ride ride1 = driver1.getCreatedRides().get(0);
 			Ride ride2 = driver1.getCreatedRides().get(1);
