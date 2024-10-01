@@ -41,8 +41,8 @@ public class BLFacadeImplementation implements BLFacade {
 	}
 
 	public BLFacadeImplementation(DataAccess da) {
-
-		System.out.println("Creating BLFacadeImplementation instance with DataAccess parameter");
+		
+		logger.info("Creating BLFacadeImplementation instance with DataAccess parameter");
 		@SuppressWarnings("unused")
 		ConfigXML c = ConfigXML.getInstance();
 
