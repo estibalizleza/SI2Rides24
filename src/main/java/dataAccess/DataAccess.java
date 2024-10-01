@@ -20,6 +20,9 @@ import domain.*;
 import exceptions.RideAlreadyExistException;
 import exceptions.RideMustBeLaterThanTodayException;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 /**
  * It implements the data access to the objectDb database
  */
@@ -34,7 +37,7 @@ public class DataAccess {
 	public DataAccess() {
 		if (c.isDatabaseInitialized()) {
 			String fileName = c.getDbFilename();
-
+			
 			File fileToDelete = new File(fileName);
 			if (fileToDelete.delete()) {
 				File fileToDeleteTemp = new File(fileName + "$");
