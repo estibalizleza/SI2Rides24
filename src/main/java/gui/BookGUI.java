@@ -1,8 +1,9 @@
 package gui;
 
-import businessLogic.BLFacade;
 import configuration.UtilDate;
 import com.toedter.calendar.JCalendar;
+
+import businesslogic.BLFacade;
 import domain.Discount;
 import domain.Ride;
 import domain.Traveler;

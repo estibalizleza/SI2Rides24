@@ -10,7 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import businessLogic.BLFacade;
+import businesslogic.BLFacade;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 

@@ -10,7 +10,7 @@ import java.awt.Rectangle;
 
 import javax.swing.JSlider;
 
-import businessLogic.BLFacade;
+import businesslogic.BLFacade;
 import domain.User;
 
 import java.awt.Color;

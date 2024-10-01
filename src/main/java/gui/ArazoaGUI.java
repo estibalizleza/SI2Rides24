@@ -13,7 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import businessLogic.BLFacade;
+import businesslogic.BLFacade;
 import domain.Booking;
 
 public class ArazoaGUI extends JFrame{

@@ -8,7 +8,6 @@ import java.util.ResourceBundle;
 
 import javax.swing.JFrame;
 
-import businessLogic.BLFacade;
 import domain.Booking;
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -16,6 +15,8 @@ import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 
 import javax.swing.JTextArea;
+
+import businesslogic.BLFacade;
 
 public class ErreklamazioakGUI extends JFrame {
 	private static final long serialVersionUID = 1L;

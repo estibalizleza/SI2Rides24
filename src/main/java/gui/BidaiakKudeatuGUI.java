@@ -2,7 +2,8 @@ package gui;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import businessLogic.BLFacade;
+
+import businesslogic.BLFacade;
 import domain.Ride;
 
 import java.awt.*;
