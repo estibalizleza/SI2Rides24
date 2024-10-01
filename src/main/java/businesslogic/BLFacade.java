@@ -21,7 +21,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebService;
 
 /**
- * Interface that specifies the business logic.
+ * Interface that specifies the Business logic.
  */
 @WebService
 public interface BLFacade {
