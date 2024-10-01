@@ -1,6 +1,7 @@
 package dataAccess;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,6 +22,8 @@ import exceptions.RideAlreadyExistException;
 import exceptions.RideMustBeLaterThanTodayException;
 
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
@@ -37,7 +40,22 @@ public class DataAccess {
 	public DataAccess() {
 		if (c.isDatabaseInitialized()) {
 			String fileName = c.getDbFilename();
+			Path fileToDeletePath = Paths.get(fileName);
 			
+			try {
+				Files.deleteIfExists(fileToDeletePath);
+				System.out.println("File deleted");
+				
+				File fileToDeleteTemp = new File(fileName + "$");
+				Path fileToDeleteTempPath = Paths.get(fileName + "$");
+				Files.delete(fileToDeleteTempPath);
+				
+			} catch (NoSuchFileException e) {
+				System.out.println("Error deleting file");
+			} catch (IOException e) {
+				System.out.println("Error deleting file");
+			}
+			/**
 			File fileToDelete = new File(fileName);
 			if (fileToDelete.delete()) {
 				File fileToDeleteTemp = new File(fileName + "$");
@@ -47,6 +65,7 @@ public class DataAccess {
 			} else {
 				System.out.println("Operation failed");
 			}
+			**/
 		}
 		open();
 		if (c.isDatabaseInitialized()) {
