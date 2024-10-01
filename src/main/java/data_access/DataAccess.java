@@ -50,8 +50,6 @@ public class DataAccess {
 				Path fileToDeleteTempPath = Paths.get(fileName + "$");
 				Files.delete(fileToDeleteTempPath);
 				
-			} catch (NoSuchFileException e) {
-				System.out.println("Error deleting file");
 			} catch (IOException e) {
 				System.out.println("Error deleting file");
 			}
