@@ -92,10 +92,6 @@ public class Complaint implements Serializable {
 		return aurkeztua;
 	}
 
-	public void setAurkeztua(Boolean aurkeztua) {
-		this.aurkeztua = aurkeztua;
-	}
-
 	public String getEgoera() {
 		return egoera;
 	}
