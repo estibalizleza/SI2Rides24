@@ -21,7 +21,7 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import dataAccess.DataAccess;
+import data_access.DataAccess;
 import domain.Driver;
 import domain.Ride;
 import exceptions.RideAlreadyExistException;

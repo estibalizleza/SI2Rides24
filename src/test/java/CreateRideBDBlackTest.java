@@ -11,7 +11,7 @@ import java.util.Date;
 
 import org.junit.Test;
 
-import dataAccess.DataAccess;
+import data_access.DataAccess;
 import domain.Ride;
 import exceptions.RideAlreadyExistException;
 import exceptions.RideMustBeLaterThanTodayException;
