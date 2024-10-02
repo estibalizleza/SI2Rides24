@@ -34,6 +34,7 @@ public class DataAccess {
 	private EntityManagerFactory emf;
 	public static final String DONOSTIA = "Donostia";
 	ConfigXML c = ConfigXML.getInstance();
+	private static final String R = "Rejected";
 	
 	private String adminPass="admin";
 
@@ -142,9 +143,9 @@ public class DataAccess {
 			Booking book4 = new Booking(ride3, traveler1, 1);
 			Booking book3 = new Booking(ride2, traveler2, 2);
 			Booking book5 = new Booking(ride5, traveler1, 1);
-
+			
 			book1.setStatus("Accepted");
-			book2.setStatus("Rejected");
+			book2.setStatus(R);
 			book3.setStatus("Accepted");
 			book4.setStatus("Accepted");
 			book5.setStatus("Accepted");
@@ -694,7 +695,7 @@ public class DataAccess {
 					addMovement(traveler, "BookDeny", price);
 					db.getTransaction().begin();
 				}
-				booking.setStatus("Rejected");
+				booking.setStatus(R);
 				db.merge(booking);
 			}
 			ride.setActive(false);
@@ -900,7 +901,7 @@ public class DataAccess {
 				List<Booking> lb = getBookedRides(us.getUsername());
 				if (lb != null) {
 					for (Booking li : lb) {
-						li.setStatus("Rejected");
+						li.setStatus(R);
 						li.getRide().setnPlaces(li.getRide().getnPlaces() + li.getSeats());
 					}
 				}
