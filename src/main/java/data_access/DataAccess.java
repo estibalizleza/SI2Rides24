@@ -37,6 +37,7 @@ public class DataAccess {
 	private static final String R = "Rejected";
 	private static final String A = "Accepted";
 	public static final String BF = "BookFreeze";
+	public static final String USERNAME = "username";
 
 	
 	private String adminPass="admin";
@@ -363,14 +364,14 @@ public class DataAccess {
 
 	public User getUser(String erab) {
 		TypedQuery<User> query = db.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class);
-		query.setParameter("username", erab);
+		query.setParameter(USERNAME, erab);
 		return query.getSingleResult();
 	}
 
 	public double getActualMoney(String erab) {
 		TypedQuery<Double> query = db.createQuery("SELECT u.money FROM User u WHERE u.username = :username",
 				Double.class);
-		query.setParameter("username", erab);
+		query.setParameter(USERNAME, erab);
 		Double money = query.getSingleResult();
 		if (money != null) {
 			return money;
@@ -382,19 +383,19 @@ public class DataAccess {
 	public boolean isRegistered(String erab, String passwd) {
 		TypedQuery<Long> travelerQuery = db.createQuery(
 				"SELECT COUNT(t) FROM Traveler t WHERE t.username = :username AND t.passwd = :passwd", Long.class);
-		travelerQuery.setParameter("username", erab);
+		travelerQuery.setParameter(USERNAME, erab);
 		travelerQuery.setParameter("passwd", passwd);
 		Long travelerCount = travelerQuery.getSingleResult();
 
 		TypedQuery<Long> driverQuery = db.createQuery(
 				"SELECT COUNT(d) FROM Driver d WHERE d.username = :username AND d.passwd = :passwd", Long.class);
-		driverQuery.setParameter("username", erab);
+		driverQuery.setParameter(USERNAME, erab);
 		driverQuery.setParameter("passwd", passwd);
 		Long driverCount = driverQuery.getSingleResult();
 
 		/*TypedQuery<Long> adminQuery = db.createQuery(
 				"SELECT COUNT(a) FROM Admin a WHERE a.username = :username AND a.passwd = :passwd", Long.class);
-		adminQuery.setParameter("username", erab);
+		adminQuery.setParameter(USERNAME, erab);
 		adminQuery.setParameter("passwd", passwd);
 		Long adminCount = adminQuery.getSingleResult();*/
 
@@ -404,7 +405,7 @@ public class DataAccess {
 
 	public Driver getDriver(String erab) {
 		TypedQuery<Driver> query = db.createQuery("SELECT d FROM Driver d WHERE d.username = :username", Driver.class);
-		query.setParameter("username", erab);
+		query.setParameter(USERNAME, erab);
 		List<Driver> resultList = query.getResultList();
 		if (resultList.isEmpty()) {
 			return null;
@@ -416,7 +417,7 @@ public class DataAccess {
 	public Traveler getTraveler(String erab) {
 		TypedQuery<Traveler> query = db.createQuery("SELECT t FROM Traveler t WHERE t.username = :username",
 				Traveler.class);
-		query.setParameter("username", erab);
+		query.setParameter(USERNAME, erab);
 		List<Traveler> resultList = query.getResultList();
 		if (resultList.isEmpty()) {
 			return null;
@@ -427,7 +428,7 @@ public class DataAccess {
 
 	/*public Admin getAdmin(String erab) {
 		TypedQuery<Admin> query = db.createQuery("SELECT a FROM Admin a WHERE t.username = :username", Admin.class);
-		query.setParameter("username", erab);
+		query.setParameter(USERNAME, erab);
 		List<Admin> resultList = query.getResultList();
 		if (resultList.isEmpty()) {
 			return null;
@@ -439,17 +440,17 @@ public class DataAccess {
 	public String getMotabyUsername(String erab) {
 		TypedQuery<String> driverQuery = db.createQuery("SELECT d.mota FROM Driver d WHERE d.username = :username",
 				String.class);
-		driverQuery.setParameter("username", erab);
+		driverQuery.setParameter(USERNAME, erab);
 		List<String> driverResultList = driverQuery.getResultList();
 
 		TypedQuery<String> travelerQuery = db.createQuery("SELECT t.mota FROM Traveler t WHERE t.username = :username",
 				String.class);
-		travelerQuery.setParameter("username", erab);
+		travelerQuery.setParameter(USERNAME, erab);
 		List<String> travelerResultList = travelerQuery.getResultList();
 
 		/*TypedQuery<String> adminQuery = db.createQuery("SELECT a.mota FROM Admin a WHERE a.username = :username",
 				String.class);
-		adminQuery.setParameter("username", erab);
+		adminQuery.setParameter(USERNAME, erab);
 		List<String> adminResultList = adminQuery.getResultList();*/
 
 		if (!driverResultList.isEmpty()) {
@@ -639,7 +640,7 @@ public class DataAccess {
 		TypedQuery<Booking> query = db.createQuery(
 				"SELECT b FROM Booking b WHERE b.traveler.username = :username AND b.ride.date <= CURRENT_DATE",
 				Booking.class);
-		query.setParameter("username", username);
+		query.setParameter(USERNAME, username);
 		return query.getResultList();
 	}
 
@@ -659,7 +660,7 @@ public class DataAccess {
 			db.getTransaction().begin();
 			TypedQuery<Driver> query = db.createQuery("SELECT d FROM Driver d WHERE d.username = :username",
 					Driver.class);
-			query.setParameter("username", username);
+			query.setParameter(USERNAME, username);
 			Driver driver = query.getSingleResult();
 
 			List<Ride> rides = driver.getCreatedRides();
@@ -718,7 +719,7 @@ public class DataAccess {
 			db.getTransaction().begin();
 			TypedQuery<Driver> query = db.createQuery("SELECT d FROM Driver d WHERE d.username = :username",
 					Driver.class);
-			query.setParameter("username", username);
+			query.setParameter(USERNAME, username);
 			Driver driver = query.getSingleResult();
 
 			List<Ride> rides = driver.getCreatedRides();
@@ -939,7 +940,7 @@ public class DataAccess {
 
 			TypedQuery<Alert> query = db.createQuery("SELECT a FROM Alert a WHERE a.traveler.username = :username",
 					Alert.class);
-			query.setParameter("username", username);
+			query.setParameter(USERNAME, username);
 			List<Alert> alerts = query.getResultList();
 
 			db.getTransaction().commit();
@@ -987,7 +988,7 @@ public class DataAccess {
 			boolean alertFound = false;
 			TypedQuery<Alert> alertQuery = db.createQuery("SELECT a FROM Alert a WHERE a.traveler.username = :username",
 					Alert.class);
-			alertQuery.setParameter("username", username);
+			alertQuery.setParameter(USERNAME, username);
 			List<Alert> alerts = alertQuery.getResultList();
 
 			TypedQuery<Ride> rideQuery = db
