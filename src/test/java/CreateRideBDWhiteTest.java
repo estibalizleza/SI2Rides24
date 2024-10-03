@@ -1,4 +1,4 @@
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -298,5 +298,32 @@ public class CreateRideBDWhiteTest {
 		   }
 		   
 	@Test
-	public void test6() {}  
+	//sut.bookRide:  The Traveler("Mikel21") does not exist in the DB. The test must return false 
+	//The test supposes that the "Mikel21" does not exist in the DB
+	public void test6() {
+		String username="Mikel21";
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	    Date rideDate = null;
+	    try {
+	        rideDate = sdf.parse("05/08/2025"); 
+	    } catch (ParseException e) {
+	        fail("Date parsing failed: " + e.getMessage());
+	    }
+		Ride ride= new Ride("Iruña", "Donosti", rideDate,  2, 7.5, null);
+		int seats=2;
+		double desk=2.5;
+		
+		try {
+	        sut.open();
+	        boolean result = sut.bookRide(username, ride, seats, desk); 
+	        
+	        assertFalse(result); 
+	    } catch (Exception e) {
+	        fail("An unexpected exception occurred: " + e.getMessage()); // If an exception occurs, the test fails
+	    } finally {
+	        sut.close(); 
+	    }
+		
+		
+	}  
 }
