@@ -45,11 +45,25 @@ public class WhiteTestDB {
 	}
 
 	@Test
-	// sut.bookRide: ?
-	// return false(Exception e)
+	// sut.bookRide: Trigger an exception (in this case by passing a null ride).
+	// The test must return false and ensure the exception is handled.
 	public void test1() {
+	    String username = "Ane02";
+	    Ride ride2 = null; // This will cause a NullPointerException
+	    int seats = 1;
+	    double desk = 2.5;
 
+	    try {
+	        sut.open();
+	        boolean result = sut.bookRide(username, ride2, seats, desk);
+	        assertFalse(result); 
+	    } catch (Exception e) {
+	        fail("An unexpected exception occurred: " + e.getMessage());
+	    } finally {
+	        sut.close();
+	    }
 	}
+
 
 	@Test
 	// sut.bookRide: The Traveler("Mikel21") does not exist in the DB. The test must
@@ -126,11 +140,6 @@ public class WhiteTestDB {
 		String username = "Ane02";
 		int seats = 1;
 		double desk = 2.5;
-
-		System.out.println("Expected cost: " + (ride.getPrice() - desk) * seats);
-		testDA.open();
-		System.out.println("Is traveler on DB?" + testDA.existTraveler("Ane02"));
-		testDA.close();
 
 		try {
 			sut.open();
