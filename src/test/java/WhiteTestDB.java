@@ -1,5 +1,4 @@
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -13,7 +12,6 @@ import org.junit.Test;
 
 import data_access.DataAccess;
 import domain.Ride;
-import domain.Traveler;
 import testOperations.TestDataAccess;
 
 public class WhiteTestDB {
@@ -46,7 +44,7 @@ public class WhiteTestDB {
 
 	@Test
 	// sut.bookRide: Trigger an exception (in this case by passing a null ride).
-	// The test must return false and ensure the exception is handled.
+	// The test will return false and throw a NullPointerException.
 	public void test1() {
 	    String username = "Ane02";
 	    Ride ride2 = null; // This will cause a NullPointerException
@@ -79,7 +77,7 @@ public class WhiteTestDB {
 			boolean result = sut.bookRide(username, ride, seats, desk);
 			assertFalse(result);
 		} catch (Exception e) {
-			fail("An unexpected exception occurred: " + e.getMessage()); // If an exception occurs, the test fails
+			fail("An unexpected exception occurred: " + e.getMessage()); 
 		} finally {
 			sut.close();
 		}
@@ -101,7 +99,7 @@ public class WhiteTestDB {
 
 			assertFalse(result);
 		} catch (Exception e) {
-			fail("An unexpected exception occurred: " + e.getMessage()); // If an exception occurs, the test fails
+			fail("An unexpected exception occurred: " + e.getMessage()); 
 		} finally {
 			sut.close();
 		}
@@ -124,7 +122,7 @@ public class WhiteTestDB {
 
 			assertFalse(result);
 		} catch (Exception e) {
-			fail("An unexpected exception occurred: " + e.getMessage()); // If an exception occurs, the test fails
+			fail("An unexpected exception occurred: " + e.getMessage()); 
 		} finally {
 			sut.close();
 		}
@@ -147,7 +145,7 @@ public class WhiteTestDB {
 
 			assertTrue(result);
 		} catch (Exception e) {
-			fail("An unexpected exception occurred: " + e.getMessage()); // If an exception occurs, the test fails
+			fail("An unexpected exception occurred: " + e.getMessage()); 
 		} finally {
 			sut.close();
 		}
