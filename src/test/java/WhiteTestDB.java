@@ -15,7 +15,6 @@ import org.junit.Test;
 
 import data_access.DataAccess;
 import domain.Booking;
-import domain.Driver;
 import domain.Ride;
 import domain.Traveler;
 import testOperations.TestDataAccess;
@@ -188,7 +187,6 @@ public class WhiteTestDB {
 
 		try {
 			sut.open();
-			int numBookingsBefore = sut.getTraveler(username).getBookedRides().size();
 			boolean result = sut.bookRide(username, ride, seats, desk);
 
 			// check if the booking was successful

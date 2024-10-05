@@ -202,43 +202,45 @@ public class TestDataAccess {
 		Traveler t = db.find(Traveler.class, name);
 		if (t != null) {
 			db.getTransaction().begin();
+			for (Booking b : t.getBookedRides()) {
+				db.remove(b);
+			}
 			db.remove(t);
 			db.getTransaction().commit();
 			return true;
 		} else
 			return false;
 	}
-	
+
 	public boolean existTraveler(String name) {
 		System.out.println(">> TestDataAccess: existTraveler");
 		Traveler d = db.find(Traveler.class, name);
-		if (d!=null) {
+		if (d != null) {
 			return true;
-		} else 
-		return false;
+		} else
+			return false;
 	}
 
 	public Booking getBooking(Ride ride, String travelerName) {
 		System.out.println(">> TestDataAccess: getBooking");
-	    
-	    try {
-	        Traveler traveler = db.find(Traveler.class, travelerName);
-	        
-	        if (traveler == null) {
-	            System.out.println("Traveler not found: " + travelerName);
-	            return null;
-	        }
-	        
-	        return db.createQuery("SELECT b FROM Booking b WHERE b.ride = :ride AND b.traveler = :traveler", Booking.class)
-	                 .setParameter("ride", ride)
-	                 .setParameter("traveler", traveler)
-	                 .getSingleResult();
-	                 
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return null;
-	    }
+
+		try {
+			Traveler traveler = db.find(Traveler.class, travelerName);
+
+			if (traveler == null) {
+				System.out.println("Traveler not found: " + travelerName);
+				return null;
+			}
+
+			return db
+					.createQuery("SELECT b FROM Booking b WHERE b.ride = :ride AND b.traveler = :traveler",
+							Booking.class)
+					.setParameter("ride", ride).setParameter("traveler", traveler).getSingleResult();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
-	
 
 }

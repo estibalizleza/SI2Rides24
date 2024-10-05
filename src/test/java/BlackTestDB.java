@@ -1,4 +1,5 @@
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -12,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import data_access.DataAccess;
+import domain.Booking;
 import domain.Ride;
 import domain.Traveler;
 import testOperations.TestDataAccess;
@@ -24,7 +26,6 @@ public class BlackTestDB {
 	static TestDataAccess testDA = new TestDataAccess();
 
 	private Ride ride1;
-	private Ride ride2;
 
 	@Before
 	public void setUp() {
@@ -58,6 +59,27 @@ public class BlackTestDB {
 			sut.open();
 			boolean result = sut.bookRide(username, ride1, seats, desk);
 			assertTrue(result);
+
+			Traveler traveler = sut.getTraveler("Ane02");
+			double expectedBalance = 100 - ((ride1.getPrice() - desk) * seats);
+
+			// check if the traveler money has been correctly updated
+			assertEquals(expectedBalance, traveler.getMoney(), 0.01);
+
+			// check if the number of seats of the ride is reduced
+			assertEquals(ride1.getnPlaces(), 1);
+
+			// check if the booking has been done
+			testDA.open();
+			Booking booking = testDA.getBooking(ride1, "Ane02");
+			testDA.close();
+			assertNotNull(booking);
+
+			boolean bookingExists = traveler.getBookedRides().stream()
+					.anyMatch(b -> b.getBookNumber() == (booking.getBookNumber()));
+
+			assertTrue(bookingExists);
+
 		} catch (Exception e) {
 			fail("An unexpected exception occurred: " + e.getMessage());
 		} finally {
@@ -66,17 +88,20 @@ public class BlackTestDB {
 	}
 
 	@Test
-	// sut.bookRide: The username entered is null, therfore, the travaler object
+	// sut.bookRide: The username entered is null, therefore, the traveler object
 	// created will be null and the method will return false
 	// return false
 	public void test2() {
-		String username = "Mikel21";
 		int seats = 2;
 		double desk = 2.5;
 		try {
 			sut.open();
 			boolean result = sut.bookRide(null, ride1, seats, desk);
 			assertFalse(result);
+
+			// Check that the number of seats in the ride hasn't changed
+			assertEquals(2, ride1.getnPlaces());
+
 		} catch (Exception e) {
 			fail("An unexpected exception occurred: " + e.getMessage());
 		} finally {
@@ -96,8 +121,18 @@ public class BlackTestDB {
 
 		try {
 			sut.open();
+			int numBookingsBefore = sut.getTraveler(username).getBookedRides().size();
 			boolean result = sut.bookRide(username, null, seats, desk);
 			assertFalse(result);
+
+			Traveler traveler = sut.getTraveler(username);
+
+			// Check that the traveler's balance hasn't changed
+			assertEquals(100, traveler.getMoney(), 0.01);
+
+			// Check that no new booking was added
+			assertEquals(traveler.getBookedRides().size(), numBookingsBefore);
+
 		} catch (Exception e) {
 			fail("An unexpected exception occurred: " + e.getMessage());
 		} finally {
@@ -118,9 +153,21 @@ public class BlackTestDB {
 
 		try {
 			sut.open();
+			int numBookingsBefore = sut.getTraveler(username).getBookedRides().size();
 			boolean result = sut.bookRide(username, ride1, seats, desk);
-
 			assertFalse(result);
+
+			Traveler traveler = sut.getTraveler(username);
+
+			// Check that the traveler's balance hasn't changed
+			assertEquals(100, traveler.getMoney(), 0.01);
+
+			// Check that no new booking was added
+			assertEquals(traveler.getBookedRides().size(), numBookingsBefore);
+
+			// Check that the number of seats in the ride hasn't changed
+			assertEquals(2, ride1.getnPlaces());
+
 		} catch (Exception e) {
 			fail("An unexpected exception occurred: " + e.getMessage());
 		} finally {
@@ -140,9 +187,21 @@ public class BlackTestDB {
 
 		try {
 			sut.open();
+			int numBookingsBefore = sut.getTraveler(username).getBookedRides().size();
 			boolean result = sut.bookRide(username, ride1, seats, desk);
-
 			assertFalse(result);
+
+			Traveler traveler = sut.getTraveler(username);
+
+			// Check that the traveler's balance hasn't changed
+			assertEquals(100, traveler.getMoney(), 0.01);
+
+			// Check that no new booking was added
+			assertEquals(traveler.getBookedRides().size(), numBookingsBefore);
+
+			// Check that the number of seats in the ride hasn't changed
+			assertEquals(2, ride1.getnPlaces());
+
 		} catch (Exception e) {
 			fail("An unexpected exception occurred: " + e.getMessage());
 		} finally {
@@ -163,9 +222,21 @@ public class BlackTestDB {
 
 		try {
 			sut.open();
+			int numBookingsBefore = sut.getTraveler(username).getBookedRides().size();
 			boolean result = sut.bookRide(username, ride1, seats, desk);
-
 			assertFalse(result);
+
+			Traveler traveler = sut.getTraveler(username);
+
+			// Check that the traveler's balance hasn't changed
+			assertEquals(100, traveler.getMoney(), 0.01);
+
+			// Check that no new booking was added
+			assertEquals(traveler.getBookedRides().size(), numBookingsBefore);
+
+			// Check that the number of seats in the ride hasn't changed
+			assertEquals(2, ride1.getnPlaces());
+
 		} catch (Exception e) {
 			fail("An unexpected exception occurred: " + e.getMessage());
 		} finally {
@@ -186,9 +257,21 @@ public class BlackTestDB {
 
 		try {
 			sut.open();
+			int numBookingsBefore = sut.getTraveler(username).getBookedRides().size();
 			boolean result = sut.bookRide(username, ride1, seats, desk);
-
 			assertFalse(result);
+
+			Traveler traveler = sut.getTraveler(username);
+
+			// Check that the traveler's balance hasn't changed
+			assertEquals(100, traveler.getMoney(), 0.01);
+
+			// Check that no new booking was added
+			assertEquals(traveler.getBookedRides().size(), numBookingsBefore);
+
+			// Check that the number of seats in the ride hasn't changed
+			assertEquals(2, ride1.getnPlaces());
+
 		} catch (Exception e) {
 			fail("An unexpected exception occurred: " + e.getMessage());
 		} finally {
