@@ -1,4 +1,5 @@
 package test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -28,44 +29,39 @@ import data_access.DataAccess;
 import domain.Driver;
 import domain.Ride;
 import domain.Traveler;
-import testOperations.TestDataAccess;
 
 public class BookRideBDMockWhiteTest {
-static DataAccess sut;
-	
+	static DataAccess sut;
+
 	protected MockedStatic<Persistence> persistenceMock;
 
 	@Mock
-	protected  EntityManagerFactory entityManagerFactory;
+	protected EntityManagerFactory entityManagerFactory;
 	@Mock
-	protected  EntityManager db;
+	protected EntityManager db;
 	@Mock
-    protected  EntityTransaction  et;
-
-	// additional operations needed to execute the test
-	static TestDataAccess testDA = new TestDataAccess();
+	protected EntityTransaction et;
 
 	private Ride ride;
 	private Date rideDate;
 	private String username;
 	private Traveler traveler1;
-	
 
 	@Before
-    public  void init() {
-        MockitoAnnotations.openMocks(this);
-        persistenceMock = Mockito.mockStatic(Persistence.class);
+	public void init() {
+		MockitoAnnotations.openMocks(this);
+		persistenceMock = Mockito.mockStatic(Persistence.class);
 		persistenceMock.when(() -> Persistence.createEntityManagerFactory(Mockito.any()))
-        .thenReturn(entityManagerFactory);
-        
-        Mockito.doReturn(db).when(entityManagerFactory).createEntityManager();
+				.thenReturn(entityManagerFactory);
+
+		Mockito.doReturn(db).when(entityManagerFactory).createEntityManager();
 		Mockito.doReturn(et).when(db).getTransaction();
 		TypedQuery<Traveler> mockedQuery = Mockito.mock(TypedQuery.class);
-        Mockito.when(db.createQuery(Mockito.anyString(), Mockito.eq(Traveler.class))).thenReturn(mockedQuery);
-        
-	    sut=new DataAccess(db);
-    }
-	
+		Mockito.when(db.createQuery(Mockito.anyString(), Mockito.eq(Traveler.class))).thenReturn(mockedQuery);
+
+		sut = new DataAccess(db);
+	}
+
 	@Before
 	public void setUp() {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -74,8 +70,10 @@ static DataAccess sut;
 			rideDate = sdf.parse("05/08/2025");
 		} catch (ParseException e) {
 			fail("Date parsing failed: " + e.getMessage());
-		}	
-		
+		}
+
+		Driver driver1 = new Driver("Esti", "1234");
+		ride = new Ride("Iruña", "Donosti", rideDate, 2, 7, driver1);
 	}
 
 	@Test
@@ -87,17 +85,17 @@ static DataAccess sut;
 		int seats = 1;
 		double desk = 2.5;
 		traveler1 = new Traveler(username, "1234");
-		traveler1.setMoney(100); 
-        
-        Mockito.when(db.find(Traveler.class, username)).thenReturn(traveler1);
-        TypedQuery<Traveler> mockQuery = Mockito.mock(TypedQuery.class);
-        Mockito.when(db.createQuery(Mockito.anyString(), Mockito.eq(Traveler.class))).thenReturn(mockQuery);
-        Mockito.when(mockQuery.setParameter(Mockito.anyString(), Mockito.any())).thenReturn(mockQuery);
-        Mockito.when(mockQuery.getResultList()).thenReturn(Arrays.asList(traveler1)); 
+		traveler1.setMoney(100);
+
+		Mockito.when(db.find(Traveler.class, username)).thenReturn(traveler1);
+		TypedQuery<Traveler> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(db.createQuery(Mockito.anyString(), Mockito.eq(Traveler.class))).thenReturn(mockQuery);
+		Mockito.when(mockQuery.setParameter(Mockito.anyString(), Mockito.any())).thenReturn(mockQuery);
+		Mockito.when(mockQuery.getResultList()).thenReturn(Arrays.asList(traveler1));
 
 		try {
 			Mockito.when(db.find(Ride.class, null)).thenReturn(null);
-			
+
 			sut.open();
 			int numBookingsBefore = sut.getTraveler(username).getBookedRides().size();
 			boolean result = sut.bookRide(username, ride, seats, desk);
@@ -126,15 +124,13 @@ static DataAccess sut;
 		username = "Mikel21";
 		int seats = 2;
 		double desk = 2.5;
-        Driver driver1 = new Driver("Esti", "1234"); 
-        ride = new Ride("Iruña", "Donosti", rideDate, 2, 7, driver1);
-        
-        Mockito.when(db.find(Traveler.class, username)).thenReturn(traveler1);
-        Mockito.when(db.find(Ride.class, ride.getRideNumber())).thenReturn(ride);
-        TypedQuery<Traveler> mockQuery = Mockito.mock(TypedQuery.class);
-        Mockito.when(db.createQuery(Mockito.anyString(), Mockito.eq(Traveler.class))).thenReturn(mockQuery);
-        Mockito.when(mockQuery.setParameter(Mockito.anyString(), Mockito.any())).thenReturn(mockQuery);
-        Mockito.when(mockQuery.getResultList()).thenReturn(Arrays.asList(traveler1));  
+
+		Mockito.when(db.find(Traveler.class, username)).thenReturn(traveler1);
+		Mockito.when(db.find(Ride.class, ride.getRideNumber())).thenReturn(ride);
+		TypedQuery<Traveler> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(db.createQuery(Mockito.anyString(), Mockito.eq(Traveler.class))).thenReturn(mockQuery);
+		Mockito.when(mockQuery.setParameter(Mockito.anyString(), Mockito.any())).thenReturn(mockQuery);
+		Mockito.when(mockQuery.getResultList()).thenReturn(Arrays.asList(traveler1));
 		try {
 			sut.open();
 
@@ -164,16 +160,14 @@ static DataAccess sut;
 		int seats = 3;
 		double desk = 2.5;
 		traveler1 = new Traveler(username, "1234");
-		traveler1.setMoney(100); 
-        Driver driver1 = new Driver("Esti", "1234"); 
-        ride = new Ride("Iruña", "Donosti", rideDate, 2, 7, driver1);
-        
-        Mockito.when(db.find(Traveler.class, username)).thenReturn(traveler1);
-        Mockito.when(db.find(Ride.class, ride.getRideNumber())).thenReturn(ride);
-        TypedQuery<Traveler> mockQuery = Mockito.mock(TypedQuery.class);
-        Mockito.when(db.createQuery(Mockito.anyString(), Mockito.eq(Traveler.class))).thenReturn(mockQuery);
-        Mockito.when(mockQuery.setParameter(Mockito.anyString(), Mockito.any())).thenReturn(mockQuery);
-        Mockito.when(mockQuery.getResultList()).thenReturn(Arrays.asList(traveler1));  
+		traveler1.setMoney(100);
+
+		Mockito.when(db.find(Traveler.class, username)).thenReturn(traveler1);
+		Mockito.when(db.find(Ride.class, ride.getRideNumber())).thenReturn(ride);
+		TypedQuery<Traveler> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(db.createQuery(Mockito.anyString(), Mockito.eq(Traveler.class))).thenReturn(mockQuery);
+		Mockito.when(mockQuery.setParameter(Mockito.anyString(), Mockito.any())).thenReturn(mockQuery);
+		Mockito.when(mockQuery.getResultList()).thenReturn(Arrays.asList(traveler1));
 
 		try {
 			sut.open();
@@ -209,16 +203,14 @@ static DataAccess sut;
 		int seats = 1;
 		double desk = 2.5;
 		traveler1 = new Traveler(username, "1234");
-		traveler1.setMoney(4); 
-        Driver driver1 = new Driver("Esti", "1234"); 
-        ride = new Ride("Iruña", "Donosti", rideDate, 2, 7, driver1);
-        
-        Mockito.when(db.find(Traveler.class, username)).thenReturn(traveler1);
-        Mockito.when(db.find(Ride.class, ride.getRideNumber())).thenReturn(ride);
-        TypedQuery<Traveler> mockQuery = Mockito.mock(TypedQuery.class);
-        Mockito.when(db.createQuery(Mockito.anyString(), Mockito.eq(Traveler.class))).thenReturn(mockQuery);
-        Mockito.when(mockQuery.setParameter(Mockito.anyString(), Mockito.any())).thenReturn(mockQuery);
-        Mockito.when(mockQuery.getResultList()).thenReturn(Arrays.asList(traveler1));  
+		traveler1.setMoney(4);
+
+		Mockito.when(db.find(Traveler.class, username)).thenReturn(traveler1);
+		Mockito.when(db.find(Ride.class, ride.getRideNumber())).thenReturn(ride);
+		TypedQuery<Traveler> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(db.createQuery(Mockito.anyString(), Mockito.eq(Traveler.class))).thenReturn(mockQuery);
+		Mockito.when(mockQuery.setParameter(Mockito.anyString(), Mockito.any())).thenReturn(mockQuery);
+		Mockito.when(mockQuery.getResultList()).thenReturn(Arrays.asList(traveler1));
 
 		try {
 			sut.open();
@@ -255,38 +247,33 @@ static DataAccess sut;
 		int seats = 1;
 		double desk = 2.5;
 		traveler1 = new Traveler(username, "1234");
-		traveler1.setMoney(100); 
-        Driver driver1 = new Driver("Esti", "1234"); 
-        ride = new Ride("Iruña", "Donosti", rideDate, 2, 7, driver1);
-        
-        Mockito.when(db.find(Traveler.class, username)).thenReturn(traveler1);
-        Mockito.when(db.find(Ride.class, ride.getRideNumber())).thenReturn(ride);
-        TypedQuery<Traveler> mockQuery = Mockito.mock(TypedQuery.class);
-        Mockito.when(db.createQuery(Mockito.anyString(), Mockito.eq(Traveler.class))).thenReturn(mockQuery);
-        Mockito.when(mockQuery.setParameter(Mockito.anyString(), Mockito.any())).thenReturn(mockQuery);
-        Mockito.when(mockQuery.getResultList()).thenReturn(Arrays.asList(traveler1));   
-		
+		traveler1.setMoney(100);
+
+		Mockito.when(db.find(Traveler.class, username)).thenReturn(traveler1);
+		Mockito.when(db.find(Ride.class, ride.getRideNumber())).thenReturn(ride);
+		TypedQuery<Traveler> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(db.createQuery(Mockito.anyString(), Mockito.eq(Traveler.class))).thenReturn(mockQuery);
+		Mockito.when(mockQuery.setParameter(Mockito.anyString(), Mockito.any())).thenReturn(mockQuery);
+		Mockito.when(mockQuery.getResultList()).thenReturn(Arrays.asList(traveler1));
 
 		try {
-			
+
 			sut.open();
 			boolean result = sut.bookRide(username, ride, seats, desk);
 			// check if the booking was successful
 			assertTrue(result);
-			
+
 			Traveler traveler = sut.getTraveler("Ane02");
 			double expectedBalance = 100 - ((ride.getPrice() - desk) * seats);
 
 			// check if the traveler money has been correctly updated
 			assertEquals(expectedBalance, traveler.getMoney(), 0.01);
 
-			// check if the number of 	seats of the ride is reduced
+			// check if the number of seats of the ride is reduced
 			assertEquals(1, ride.getnPlaces());
-			
+
 			// check if the booking has been done
 			assertEquals(1, traveler.getBookedRides().size(), 0.01);
-			
-
 
 		} catch (Exception e) {
 			fail("An unexpected exception occurred: " + e.getMessage());
@@ -299,7 +286,6 @@ static DataAccess sut;
 	@After
 	public void tearDown() {
 		persistenceMock.close();
-		
-		
+
 	}
 }
