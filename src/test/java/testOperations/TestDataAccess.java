@@ -9,6 +9,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import configuration.ConfigXML;
+import domain.Booking;
 import domain.Driver;
 import domain.Ride;
 import domain.Traveler;
@@ -216,5 +217,28 @@ public class TestDataAccess {
 		} else 
 		return false;
 	}
+
+	public Booking getBooking(Ride ride, String travelerName) {
+		System.out.println(">> TestDataAccess: getBooking");
+	    
+	    try {
+	        Traveler traveler = db.find(Traveler.class, travelerName);
+	        
+	        if (traveler == null) {
+	            System.out.println("Traveler not found: " + travelerName);
+	            return null;
+	        }
+	        
+	        return db.createQuery("SELECT b FROM Booking b WHERE b.ride = :ride AND b.traveler = :traveler", Booking.class)
+	                 .setParameter("ride", ride)
+	                 .setParameter("traveler", traveler)
+	                 .getSingleResult();
+	                 
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return null;
+	    }
+	}
+	
 
 }

@@ -51,7 +51,7 @@ public class CreateRideBDWhiteTest {
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}	
+				}	 
 				
 				
 				
