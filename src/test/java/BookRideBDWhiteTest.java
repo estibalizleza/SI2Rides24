@@ -19,7 +19,7 @@ import domain.Ride;
 import domain.Traveler;
 import testOperations.TestDataAccess;
 
-public class WhiteTestDB {
+public class BookRideBDWhiteTest {
 	// sut:system under test
 	static DataAccess sut = new DataAccess();
 

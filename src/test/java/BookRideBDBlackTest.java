@@ -18,7 +18,7 @@ import domain.Ride;
 import domain.Traveler;
 import testOperations.TestDataAccess;
 
-public class BlackTestDB {
+public class BookRideBDBlackTest {
 	// sut:system under test
 	static DataAccess sut = new DataAccess();
 
