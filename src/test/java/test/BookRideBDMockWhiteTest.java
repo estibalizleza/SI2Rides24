@@ -1,3 +1,4 @@
+package test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -280,10 +281,10 @@ static DataAccess sut;
 			assertEquals(expectedBalance, traveler.getMoney(), 0.01);
 
 			// check if the number of 	seats of the ride is reduced
-			assertEquals(ride.getnPlaces(), 1);
+			assertEquals(1, ride.getnPlaces());
 			
 			// check if the booking has been done
-			assertEquals(traveler.getBookedRides().size(), 1, 0.01);
+			assertEquals(1, traveler.getBookedRides().size(), 0.01);
 			
 
 

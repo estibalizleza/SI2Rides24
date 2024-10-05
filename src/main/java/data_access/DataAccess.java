@@ -22,7 +22,6 @@ import exceptions.RideAlreadyExistException;
 import exceptions.RideMustBeLaterThanTodayException;
 
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -47,7 +46,6 @@ public class DataAccess {
 				Files.deleteIfExists(fileToDeletePath);
 				System.out.println("File deleted");
 
-				File fileToDeleteTemp = new File(fileName + "$");
 				Path fileToDeleteTempPath = Paths.get(fileName + "$");
 				Files.delete(fileToDeleteTempPath);
 
@@ -386,14 +384,6 @@ public class DataAccess {
 		driverQuery.setParameter("passwd", passwd);
 		Long driverCount = driverQuery.getSingleResult();
 
-		/*
-		 * TypedQuery<Long> adminQuery = db.createQuery(
-		 * "SELECT COUNT(a) FROM Admin a WHERE a.username = :username AND a.passwd = :passwd"
-		 * , Long.class); adminQuery.setParameter("username", erab);
-		 * adminQuery.setParameter("passwd", passwd); Long adminCount =
-		 * adminQuery.getSingleResult();
-		 */
-
 		boolean isAdmin = ((erab.compareTo("admin") == 0) && (passwd.compareTo(adminPass) == 0));
 		return travelerCount > 0 || driverCount > 0 || isAdmin;
 	}
@@ -421,13 +411,6 @@ public class DataAccess {
 		}
 	}
 
-	/*
-	 * public Admin getAdmin(String erab) { TypedQuery<Admin> query =
-	 * db.createQuery("SELECT a FROM Admin a WHERE t.username = :username",
-	 * Admin.class); query.setParameter("username", erab); List<Admin> resultList =
-	 * query.getResultList(); if (resultList.isEmpty()) { return null; } else {
-	 * return resultList.get(0); } }
-	 */
 
 	public String getMotabyUsername(String erab) {
 		TypedQuery<String> driverQuery = db.createQuery("SELECT d.mota FROM Driver d WHERE d.username = :username",
@@ -439,13 +422,6 @@ public class DataAccess {
 				String.class);
 		travelerQuery.setParameter("username", erab);
 		List<String> travelerResultList = travelerQuery.getResultList();
-
-		/*
-		 * TypedQuery<String> adminQuery =
-		 * db.createQuery("SELECT a.mota FROM Admin a WHERE a.username = :username",
-		 * String.class); adminQuery.setParameter("username", erab); List<String>
-		 * adminResultList = adminQuery.getResultList();
-		 */
 
 		if (!driverResultList.isEmpty()) {
 			return driverResultList.get(0);

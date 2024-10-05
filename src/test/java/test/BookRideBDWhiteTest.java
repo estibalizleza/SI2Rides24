@@ -1,3 +1,4 @@
+package test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -199,7 +200,7 @@ public class BookRideBDWhiteTest {
 			assertEquals(expectedBalance, traveler.getMoney(), 0.01);
 
 			// check if the number of seats of the ride is reduced
-			assertEquals(ride.getnPlaces(), 1);
+			assertEquals(1, ride.getnPlaces());
 
 			// check if the booking has been done
 			testDA.open();
@@ -224,13 +225,6 @@ public class BookRideBDWhiteTest {
 	public void tearDown() {
 		// Clean up any data or reset the state if needed
 		testDA.open();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date rideDate = null;
-		try {
-			rideDate = sdf.parse("05/08/2025");
-		} catch (ParseException e) {
-			fail("Date parsing failed: " + e.getMessage());
-		}
 		testDA.removeRide("Esti", "Iruña", "Donosti", rideDate);
 		testDA.removeDriver("Esti");
 		testDA.removeTraveler("Ane02");

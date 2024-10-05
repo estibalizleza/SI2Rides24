@@ -1,3 +1,4 @@
+package test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
@@ -67,7 +68,7 @@ public class BookRideBDBlackTest {
 			assertEquals(expectedBalance, traveler.getMoney(), 0.01);
 
 			// check if the number of seats of the ride is reduced
-			assertEquals(ride1.getnPlaces(), 1);
+			assertEquals(1, ride1.getnPlaces());
 
 			// check if the booking has been done
 			testDA.open();
