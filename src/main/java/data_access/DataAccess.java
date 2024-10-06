@@ -31,6 +31,7 @@ public class DataAccess {
 	private EntityManager db;
 	private EntityManagerFactory emf;
 	public static final String DONOSTIA = "Donostia";
+	public static final String MADRID = "Madrid";
 	ConfigXML c = ConfigXML.getInstance();
 	private static final String R = "Rejected";
 
@@ -119,11 +120,10 @@ public class DataAccess {
 			cal.set(2024, Calendar.APRIL, 20);
 			Date date4 = UtilDate.trim(cal.getTime());
 
-			String madrid = "Madrid";
-			driver1.addRide(DONOSTIA, madrid, date2, 5, 20); // ride1
+			driver1.addRide(DONOSTIA, MADRID, date2, 5, 20); // ride1
 			driver1.addRide("Irun", DONOSTIA, date2, 5, 2); // ride2
-			driver1.addRide(madrid, DONOSTIA, date3, 5, 5); // ride3
-			driver1.addRide("Barcelona", madrid, date4, 0, 10); // ride4
+			driver1.addRide(MADRID, DONOSTIA, date3, 5, 5); // ride3
+			driver1.addRide("Barcelona", MADRID, date4, 0, 10); // ride4
 			driver2.addRide(DONOSTIA, "Hondarribi", date1, 5, 3); // ride5
 
 			Ride ride1 = driver1.getCreatedRides().get(0);

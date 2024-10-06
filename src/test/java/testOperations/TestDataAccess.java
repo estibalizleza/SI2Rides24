@@ -195,7 +195,7 @@ public class TestDataAccess {
 			e.printStackTrace();
 		}
 		return null;
-	}
+	} 
 
 	public boolean removeTraveler(String name) {
 		System.out.println(">> TestDataAccess: removetraveler");
@@ -242,5 +242,55 @@ public class TestDataAccess {
 			return null;
 		}
 	}
+	public boolean removeBooking(int bookNumber) {
+	    System.out.println(">> TestDataAccess: removeBooking");
+	    
+	    // Busca la reserva en la base de datos usando el bookNumber
+	    Booking booking = db.find(Booking.class, bookNumber);
+	    
+	    if (booking != null) {
+	        db.getTransaction().begin(); // Inicia la transacción
+	        db.remove(booking); // Elimina la reserva
+	        db.getTransaction().commit(); // Confirma los cambios
+	        return true; // La eliminación fue exitosa
+	    } else {
+	        return false; // La reserva no fue encontrada
+	    }
+	}
+	public void addDriver(Driver driver) {
+	    db.getTransaction().begin();
+	    db.persist(driver);
+	    db.getTransaction().commit();
+	}
+
+	public void addRide(Ride ride) {
+	    db.getTransaction().begin();
+	    db.persist(ride);
+	    db.getTransaction().commit();
+	}
+
+	public void addTraveler(Traveler traveler) {
+	    db.getTransaction().begin();
+	    db.persist(traveler);
+	    db.getTransaction().commit();
+	}
+
+	public void addBooking(Booking booking) {
+	    db.getTransaction().begin();
+	    db.persist(booking);
+	    db.getTransaction().commit();
+	}
+	
+	public void updateRide(Ride ride) {
+	    try {
+	        db.getTransaction().begin();
+	        db.merge(ride); // Merge se usa para actualizar la entidad en la base de datos
+	        db.getTransaction().commit();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        db.getTransaction().rollback();
+	    }
+	}
+
 
 }
