@@ -115,7 +115,7 @@ public class CancelRideBDBlackTest {
 	}
 
 	@Test
-	public void test1() {
+	public void test1() { // normala
 		sut.open();
 		sut.cancelRide(ride2); // booking-a
 		sut.close();
@@ -131,7 +131,7 @@ public class CancelRideBDBlackTest {
 	}
 
 	@Test
-	public void test2() {
+	public void test2() { // ride null
 		sut.open();
 
 		try {
@@ -147,7 +147,7 @@ public class CancelRideBDBlackTest {
 	}
 
 	@Test
-	public void test3() {
+	public void test3() { // setbookings empty
 		sut.open();
 		sut.cancelRide(ride3);
 		sut.close();
@@ -155,15 +155,7 @@ public class CancelRideBDBlackTest {
 	}
 
 	@Test
-	public void test4() {
-		sut.open();
-		sut.cancelRide(ride4);
-		sut.close();
-		assertFalse(ride4.isActive());
-	}
-
-	@Test
-	public void test5() {
+	public void test4() { // traveler null
 		sut.open();
 		sut.cancelRide(ride5);
 		testDA.open();
@@ -173,7 +165,7 @@ public class CancelRideBDBlackTest {
 	}
 
 	@Test
-	public void test6() {
+	public void test5() { // izoztutako dirua
 		sut.open();
 		sut.cancelRide(ride6); // booking-a
 		sut.close();
@@ -186,6 +178,14 @@ public class CancelRideBDBlackTest {
 		Movement get = movements.get(movements.size() - 1);
 		assertEquals("BookDeny", get.getEragiketa());
 		sut.close();
+	}
+
+	@Test
+	public void test6() { // setbookings null
+		sut.open();
+		sut.cancelRide(ride4);
+		sut.close();
+		assertFalse(ride4.isActive());
 	}
 
 	@After

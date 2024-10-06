@@ -29,7 +29,7 @@ import domain.Driver;
 import domain.Ride;
 import domain.Traveler;
 
-public class CancelRideMockWhiteTest {
+public class CancelRideBDMockBlackTest {
 
 	static DataAccess sut;
 
@@ -111,37 +111,17 @@ public class CancelRideMockWhiteTest {
 	// must return null
 	// The test supposes that the "Driver Test" does not exist in the DB
 	public void test2() {
+		sut.open();
 
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date rideDate = null;
-		
 		try {
-			rideDate = sdf.parse("05/10/2026");
-		} catch (ParseException e) {
-			e.printStackTrace();
+			// Act: Pass null to cancelRide, it should not throw an exception
+			sut.cancelRide(null);
+			sut.close();
+		} catch (NullPointerException e) {
+			fail();
+		} catch (Exception e) {
+			fail();
 		}
-
-		Traveler traveler1 = new Traveler("Traveler1", "password");
-		traveler1.setIzoztatutakoDirua(10);
-		Ride ride2 = new Ride("Madrid", "Bilbo", rideDate, 3, 5, driver);
-		ride2.setActive(true);
-		Booking booking1 = new Booking(ride2, traveler1, 1); // Booking with status Accepted
-		booking1.setStatus("Accepted");
-		ride2.setBookings(Arrays.asList(booking1));
-
-		// configure the state through mocks
-		Mockito.when(db.find(Ride.class, ride2.getRideNumber())).thenReturn(ride2);
-		Mockito.when(db.find(Traveler.class, traveler1.getUsername())).thenReturn(traveler1);
-
-		// invoke System Under Test (sut)
-		sut.open();
-		sut.cancelRide(ride2); // booking-a
-		sut.close();
-		assertFalse(ride2.isActive());
-		assertEquals(5, traveler1.getIzoztatutakoDirua(), 0.0);
-		assertEquals(5.0, traveler1.getMoney(), 0.0);
-		sut.open();
-		sut.close();
 	}
 
 	@Test
@@ -197,7 +177,9 @@ public class CancelRideMockWhiteTest {
 		}
 		this.driver = new Driver("Jon", "1234");
 		Ride ride4 = new Ride("Gasteiz", "Bilbo", rideDate, 3, 5, driver);
-		ride4.setBookings(Collections.emptyList());
+		ride4.setActive(true);
+		Booking booking5 = new Booking(ride4, null, 1); // Booking with status Accepted
+		booking5.setStatus("Accepted");
 
 		Mockito.when(db.find(Ride.class, ride4.getRideNumber())).thenReturn(ride4);
 		Mockito.when(db.find(Driver.class, this.driver.getUsername())).thenReturn(null);
@@ -205,6 +187,7 @@ public class CancelRideMockWhiteTest {
 		sut.open();
 		sut.cancelRide(ride4);
 		sut.close();
+		assertFalse(ride4.isActive());
 		Driver d = db.find(Driver.class, driver.getUsername());
 		if (d != null) {
 			fail();
@@ -226,20 +209,46 @@ public class CancelRideMockWhiteTest {
 		try {
 			rideDate = sdf.parse("05/10/2026");
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		Ride ride5 = new Ride("Gasteiz", "Bilbo", rideDate, 3, 5, driver);
-		ride5.setBookings(Collections.emptyList());
+		Ride ride6 = new Ride("Donostia", "Bilbo", rideDate, 3, 15, driver);
+		ride6.setActive(true);
+		Traveler traveler6 = new Traveler("Naroa", "1233");
+		traveler6.setIzoztatutakoDirua(5);
+		traveler6.setMoney(0);
+		Booking booking6 = new Booking(ride6, traveler6, 1); // Booking with status Accepted
+		booking6.setStatus("Accepted");
+		ride6.setBookings(Arrays.asList(booking6));
 
 		// configure the state through mocks
-		Mockito.when(db.find(Ride.class, ride5.getRideNumber())).thenReturn(ride5);
+		Mockito.when(db.find(Ride.class, ride6.getRideNumber())).thenReturn(ride6);
+		Mockito.when(db.find(Traveler.class, traveler6.getUsername())).thenReturn(traveler6);
 
 		// invoke System Under Test (sut)
 		sut.open();
-		sut.cancelRide(ride5);
+		sut.cancelRide(ride6);
 		sut.close();
+		assertFalse(ride6.isActive());
+		assertFalse(traveler6.getIzoztatutakoDirua() < 0);
+	}
+
+	@Test
+	public void test6() {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		Date rideDate = null;
+		
+		try {
+			rideDate = sdf.parse("05/10/2026");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		Ride ride4 = new Ride("Gasteiz", "Bilbo", rideDate, 3, 5, driver);
+		sut.open();
+		sut.cancelRide(ride4);
+		sut.close();
+		assertFalse(ride4.isActive());
 	}
 
 }
