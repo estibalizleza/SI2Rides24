@@ -37,7 +37,7 @@ public class DataAccess {
 
 	private String adminPass = "admin";
 
-	public DataAccess() {
+	public DataAccess() { 
 		if (c.isDatabaseInitialized()) {
 			String fileName = c.getDbFilename();
 			Path fileToDeletePath = Paths.get(fileName);
@@ -651,6 +651,10 @@ public class DataAccess {
 		}
 	}
 
+	/**
+	 * This method cancels a ride for a traveler
+	 * @param ride ride of the booking
+	 */
 	public void cancelRide(Ride ride) {
 		try {
 			db.getTransaction().begin();

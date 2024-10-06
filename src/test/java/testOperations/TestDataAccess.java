@@ -2,6 +2,7 @@ package testOperations;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
@@ -290,6 +291,81 @@ public class TestDataAccess {
 	        e.printStackTrace();
 	        db.getTransaction().rollback();
 	    }
+	}
+	
+	public void cancelRide(Ride ride) {
+		System.out.println(">> TestDataAccess: cancelRide");
+		db.getTransaction().begin();
+		try {
+			if (!this.existRide(ride.getDriver().getUsername(), ride.getFrom(), ride.getTo(), ride.getDate())) {
+				db.persist(ride);
+				db.persist(ride.getDriver());
+			}
+		    List<Booking> bookings = ride.getBookings();
+		    Traveler t;
+		    if (bookings != null) {
+		    	for(Booking b : bookings) {
+			    	t = b.getTraveler();
+			    	db.persist(t);
+			    	db.persist(b);
+			    }
+		    }
+		    db.getTransaction().commit();
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void removeTestData(List<Ride> rides) {
+		db.getTransaction().begin();
+		try {
+			for (Ride r : rides) {
+				db.remove(r);
+			}
+			db.getTransaction().commit();
+		} catch (Exception e) {
+            if (db.getTransaction().isActive()) {
+                db.getTransaction().rollback();
+            }
+            e.printStackTrace();
+        }
+	}
+
+
+	public void removeJon() {
+		db.getTransaction().begin();
+		try {
+			Driver d = db.find(Driver.class, "Jon");
+			if (d != null) {
+				db.remove(d);
+			}
+			db.getTransaction().commit();
+		} catch (Exception e) {
+            if (db.getTransaction().isActive()) {
+                db.getTransaction().rollback();
+            }
+            e.printStackTrace();
+        }
+		
+	}
+
+
+	public void removeTravelerJon(String string) {
+		db.getTransaction().begin();
+		try {
+			 Traveler d = db.find(Traveler.class, string);
+			if (d != null) {
+				db.remove(d);
+			}
+			db.getTransaction().commit();
+		} catch (Exception e) {
+            if (db.getTransaction().isActive()) {
+                db.getTransaction().rollback();
+            }
+            e.printStackTrace();
+        }
+		
 	}
 
 
