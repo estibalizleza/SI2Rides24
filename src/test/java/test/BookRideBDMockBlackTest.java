@@ -236,7 +236,7 @@ public class BookRideBDMockBlackTest {
 	// ride.
 	// The test must return false
 	public void test5() {
-		String username = "Ane02";
+		username = "Ane02";
 		int seats = 5;
 		double desk = 2.5;
 		traveler1 = new Traveler(username, "1234");
@@ -280,7 +280,7 @@ public class BookRideBDMockBlackTest {
 	// The test must return false.
 	public void test6() {
 
-		String username = "Ane02";
+		username = "Ane02";
 		int seats = 1;
 		double desk = -2.3;
 		traveler1 = new Traveler(username, "1234");
@@ -324,7 +324,7 @@ public class BookRideBDMockBlackTest {
 	// The test must return false
 	public void test7() {
 
-		String username = "Ane02";
+		username = "Ane02";
 		int seats = 1;
 		double desk = 23;
 		traveler1 = new Traveler(username, "1234");

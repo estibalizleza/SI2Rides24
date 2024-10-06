@@ -174,7 +174,7 @@ public class GetBookingFromDriverBDBlackTest {
 			sut.open();
 			List<Booking> emaitza = sut.getBookingFromDriver(username);
 			System.out.println("Actual: " + emaitza);
-			assertEquals(emaitza.size(), 0);
+			assertEquals(0, emaitza.size());
 		} catch (Exception e) {
 			fail("An unexpected exception occurred: " + e.getMessage());
 		} finally {
@@ -200,7 +200,7 @@ public class GetBookingFromDriverBDBlackTest {
 			sut.open();
 			List<Booking> emaitza = sut.getBookingFromDriver(username);
 			System.out.println("Actual: " + emaitza);
-			assertEquals(emaitza.size(), 0);
+			assertEquals(0, emaitza.size());
 		} catch (Exception e) {
 			fail("An unexpected exception occurred: " + e.getMessage());
 		} finally {
@@ -218,7 +218,7 @@ public class GetBookingFromDriverBDBlackTest {
 			sut.open();
 			List<Booking> emaitza = sut.getBookingFromDriver(username);
 			System.out.println("Actual: " + emaitza);
-			assertEquals(emaitza.size(), 0);
+			assertEquals(0, emaitza.size());
 		} catch (Exception e) {
 			fail("An unexpected exception occurred: " + e.getMessage());
 		} finally {
@@ -232,7 +232,7 @@ public class GetBookingFromDriverBDBlackTest {
 		testDA.open();
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date date1 = null;
+		date1 = null;
 		try {
 			date1 = sdf.parse("23/11/2024");
 		} catch (ParseException e) {
