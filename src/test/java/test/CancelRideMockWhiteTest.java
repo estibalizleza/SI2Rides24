@@ -74,7 +74,7 @@ public class CancelRideMockWhiteTest {
 			Ride ride1;
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			Date rideDate = null;
-			;
+			
 			try {
 				rideDate = sdf.parse("05/10/2026");
 			} catch (ParseException e) {
@@ -118,7 +118,7 @@ public class CancelRideMockWhiteTest {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		Date rideDate = null;
-		;
+		
 		try {
 			rideDate = sdf.parse("05/10/2026");
 		} catch (ParseException e) {
@@ -147,9 +147,6 @@ public class CancelRideMockWhiteTest {
 		assertEquals(5, traveler1.getIzoztatutakoDirua(), 0.0);
 		assertEquals(5.0, traveler1.getMoney(), 0.0);
 		sut.open();
-		// List<Movement> movements = sut.getAllMovements(traveler1);
-		// Movement get = movements.get(movements.size() - 1);
-		// assertEquals("BookDeny", get.getEragiketa());
 		sut.close();
 	}
 
@@ -162,7 +159,7 @@ public class CancelRideMockWhiteTest {
 
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			Date rideDate = null;
-			;
+			
 			try {
 				rideDate = sdf.parse("05/10/2018");
 			} catch (ParseException e) {
@@ -205,7 +202,7 @@ public class CancelRideMockWhiteTest {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		Date rideDate = null;
-		;
+		
 		try {
 			rideDate = sdf.parse("05/10/2026");
 		} catch (ParseException e) {
@@ -251,7 +248,7 @@ public class CancelRideMockWhiteTest {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		Date rideDate = null;
-		;
+		
 		try {
 			rideDate = sdf.parse("05/10/2026");
 		} catch (ParseException e) {
