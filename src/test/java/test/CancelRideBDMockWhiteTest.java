@@ -29,7 +29,7 @@ import domain.Driver;
 import domain.Ride;
 import domain.Traveler;
 
-public class CancelRideMockWhiteTest {
+public class CancelRideBDMockWhiteTest {
 
 	static DataAccess sut;
 
