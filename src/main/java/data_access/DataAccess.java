@@ -34,6 +34,9 @@ public class DataAccess {
 	public static final String MADRID = "Madrid";
 	ConfigXML c = ConfigXML.getInstance();
 	private static final String R = "Rejected";
+	public static final String A = "Accepted";
+	private static final String BF = "BookFreeze";
+	private static final String USERNAME = "username";
 
 	private String adminPass = "admin";
 
@@ -138,11 +141,11 @@ public class DataAccess {
 			Booking book3 = new Booking(ride2, traveler2, 2);
 			Booking book5 = new Booking(ride5, traveler1, 1);
 
-			book1.setStatus("Accepted");
+			book1.setStatus(A);
 			book2.setStatus(R);
-			book3.setStatus("Accepted");
-			book4.setStatus("Accepted");
-			book5.setStatus("Accepted");
+			book3.setStatus(A);
+			book4.setStatus(A);
+			book5.setStatus(A);
 
 			db.persist(book1);
 			db.persist(book2);
@@ -150,11 +153,11 @@ public class DataAccess {
 			db.persist(book4);
 			db.persist(book5);
 
-			Movement m1 = new Movement(traveler1, "BookFreeze", 20);
-			Movement m2 = new Movement(traveler1, "BookFreeze", 40);
-			Movement m3 = new Movement(traveler1, "BookFreeze", 5);
-			Movement m4 = new Movement(traveler2, "BookFreeze", 4);
-			Movement m5 = new Movement(traveler1, "BookFreeze", 3);
+			Movement m1 = new Movement(traveler1, BF, 20);
+			Movement m2 = new Movement(traveler1, BF, 40);
+			Movement m3 = new Movement(traveler1, BF, 5);
+			Movement m4 = new Movement(traveler2, BF, 4);
+			Movement m5 = new Movement(traveler1, BF, 3);
 			Movement m6 = new Movement(driver1, "Deposit", 15);
 			Movement m7 = new Movement(traveler1, "Deposit", 168);
 
@@ -354,14 +357,14 @@ public class DataAccess {
 
 	public User getUser(String erab) {
 		TypedQuery<User> query = db.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class);
-		query.setParameter("username", erab);
+		query.setParameter(USERNAME, erab);
 		return query.getSingleResult();
 	}
 
 	public double getActualMoney(String erab) {
 		TypedQuery<Double> query = db.createQuery("SELECT u.money FROM User u WHERE u.username = :username",
 				Double.class);
-		query.setParameter("username", erab);
+		query.setParameter(USERNAME, erab);
 		Double money = query.getSingleResult();
 		if (money != null) {
 			return money;
@@ -373,13 +376,13 @@ public class DataAccess {
 	public boolean isRegistered(String erab, String passwd) {
 		TypedQuery<Long> travelerQuery = db.createQuery(
 				"SELECT COUNT(t) FROM Traveler t WHERE t.username = :username AND t.passwd = :passwd", Long.class);
-		travelerQuery.setParameter("username", erab);
+		travelerQuery.setParameter(USERNAME, erab);
 		travelerQuery.setParameter("passwd", passwd);
 		Long travelerCount = travelerQuery.getSingleResult();
 
 		TypedQuery<Long> driverQuery = db.createQuery(
 				"SELECT COUNT(d) FROM Driver d WHERE d.username = :username AND d.passwd = :passwd", Long.class);
-		driverQuery.setParameter("username", erab);
+		driverQuery.setParameter(USERNAME, erab);
 		driverQuery.setParameter("passwd", passwd);
 		Long driverCount = driverQuery.getSingleResult();
 
@@ -389,7 +392,7 @@ public class DataAccess {
 
 	public Driver getDriver(String erab) {
 		TypedQuery<Driver> query = db.createQuery("SELECT d FROM Driver d WHERE d.username = :username", Driver.class);
-		query.setParameter("username", erab);
+		query.setParameter(USERNAME, erab);
 		List<Driver> resultList = query.getResultList();
 		if (resultList.isEmpty()) {
 			return null;
@@ -401,7 +404,7 @@ public class DataAccess {
 	public Traveler getTraveler(String erab) {
 		TypedQuery<Traveler> query = db.createQuery("SELECT t FROM Traveler t WHERE t.username = :username",
 				Traveler.class);
-		query.setParameter("username", erab);
+		query.setParameter(USERNAME, erab);
 		List<Traveler> resultList = query.getResultList();
 		if (resultList.isEmpty()) {
 			return null;
@@ -414,12 +417,12 @@ public class DataAccess {
 	public String getMotabyUsername(String erab) {
 		TypedQuery<String> driverQuery = db.createQuery("SELECT d.mota FROM Driver d WHERE d.username = :username",
 				String.class);
-		driverQuery.setParameter("username", erab);
+		driverQuery.setParameter(USERNAME, erab);
 		List<String> driverResultList = driverQuery.getResultList();
 
 		TypedQuery<String> travelerQuery = db.createQuery("SELECT t.mota FROM Traveler t WHERE t.username = :username",
 				String.class);
-		travelerQuery.setParameter("username", erab);
+		travelerQuery.setParameter(USERNAME, erab);
 		List<String> travelerResultList = travelerQuery.getResultList();
 
 		if (!driverResultList.isEmpty()) {
@@ -476,28 +479,31 @@ public class DataAccess {
 		try {
 			db.getTransaction().begin();
 			User user = getUser(username);
-			if (user != null) {
-				double currentMoney = user.getMoney();
-				if (deposit) {
-					user.setMoney(currentMoney + amount);
-				} else {
-					if ((currentMoney - amount) < 0)
-						user.setMoney(0);
-					else
-						user.setMoney(currentMoney - amount);
-				}
-				db.merge(user);
-				db.getTransaction().commit();
-				return true;
-			}
-			db.getTransaction().commit();
-			return false;
+			if (user == null) {
+		            db.getTransaction().rollback();
+		            return false;
+		      }
+		      saldoaBerritu(user, amount, deposit);
+		      db.merge(user);
+		      db.getTransaction().commit();
+		      return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			db.getTransaction().rollback();
 			return false;
 		}
+
 	}
+	
+	private void saldoaBerritu(User user, double amount, boolean deposit) {
+	    double currentMoney = user.getMoney();
+	    if (deposit) {
+	        user.setMoney(currentMoney + amount);
+	    } else {
+	        user.setMoney(Math.max(0, currentMoney - amount));
+	    }
+	}
+
 
 	public void addMovement(User user, String eragiketa, double amount) {
 		try {
@@ -522,43 +528,73 @@ public class DataAccess {
 	 * @return true if the booking is successful, false otherwise
 	 */
 	public boolean bookRide(String username, Ride ride, int seats, double desk) {
-		try {
-			db.getTransaction().begin();
-
-			Traveler traveler = getTraveler(username);
-			if (traveler == null) {
-				return false;
-			}
-
-			if (ride.getnPlaces() < seats) {
-				return false;
-			}
-
-			double ridePriceDesk = (ride.getPrice() - desk) * seats;
-			double availableBalance = traveler.getMoney();
-			if (availableBalance < ridePriceDesk) {
-				return false;
-			}
-
-			Booking booking = new Booking(ride, traveler, seats);
-			booking.setTraveler(traveler);
-			booking.setDeskontua(desk);
-			db.persist(booking);
-
-			ride.setnPlaces(ride.getnPlaces() - seats);
-			traveler.addBookedRide(booking);
-			traveler.setMoney(availableBalance - ridePriceDesk);
-			traveler.setIzoztatutakoDirua(traveler.getIzoztatutakoDirua() + ridePriceDesk);
-			db.merge(ride);
-			db.merge(traveler);
-			db.getTransaction().commit();
-			return true;
-		} catch (Exception e) {
+	    try {
+	        db.getTransaction().begin();
+	       
+	        if (!canTravelerBook(username, ride, seats, desk)) {
+	            return false;
+	        }
+	       
+	        return createBooking(username, ride, seats, desk);
+	    } catch (Exception e) {
 			e.printStackTrace();
 			db.getTransaction().rollback();
 			return false;
 		}
+
 	}
+
+	/**
+	 * Checks if the traveler can book the ride based on the provided criteria.
+	 *
+	 * @param username username of the traveler
+	 * @param ride     ride to book
+	 * @param seats    number of seats to book
+	 * @param desk     discount to apply
+	 * @return true if the traveler can book the ride, false otherwise
+	 */
+	private boolean canTravelerBook(String username, Ride ride, int seats, double desk) {
+	    Traveler traveler = getTraveler(username);
+	   
+	    if (traveler == null) {
+	        return false;
+	    }
+	    if (ride.getnPlaces() < seats) {
+	        return false;
+	    }
+	    double ridePriceDesk = (ride.getPrice() - desk) * seats;
+	    if (traveler.getMoney() < ridePriceDesk) {
+	        return false;
+	    }
+	    return true;
+	}
+
+	/**
+	 * Creates a booking for the traveler.
+	 *
+	 * @param username username of the traveler
+	 * @param ride     ride to book
+	 * @param seats    number of seats to book
+	 * @param desk     discount to apply
+	 * @return true if booking was successful, false otherwise
+	 */
+	private boolean createBooking(String username, Ride ride, int seats, double desk) {
+	    Traveler traveler = getTraveler(username);
+	    double ridePriceDesk = (ride.getPrice() - desk) * seats;
+	    Booking booking = new Booking(ride, traveler, seats);
+	    booking.setTraveler(traveler);
+	    booking.setDeskontua(desk);
+	    db.persist(booking);
+	    ride.setnPlaces(ride.getnPlaces() - seats);
+	    traveler.addBookedRide(booking);
+	    traveler.setMoney(traveler.getMoney() - ridePriceDesk);
+	    traveler.setIzoztatutakoDirua(traveler.getIzoztatutakoDirua() + ridePriceDesk);
+	    db.merge(ride);
+	    db.merge(traveler);
+	    db.getTransaction().commit();
+	    return true;
+	}
+
 
 	public List<Movement> getAllMovements(User user) {
 		TypedQuery<Movement> query = db.createQuery("SELECT m FROM Movement m WHERE m.user = :user", Movement.class);
@@ -610,7 +646,7 @@ public class DataAccess {
 		TypedQuery<Booking> query = db.createQuery(
 				"SELECT b FROM Booking b WHERE b.traveler.username = :username AND b.ride.date <= CURRENT_DATE",
 				Booking.class);
-		query.setParameter("username", username);
+		query.setParameter(USERNAME, username);
 		return query.getResultList();
 	}
 
@@ -630,7 +666,7 @@ public class DataAccess {
 			db.getTransaction().begin();
 			TypedQuery<Driver> query = db.createQuery("SELECT d FROM Driver d WHERE d.username = :username",
 					Driver.class);
-			query.setParameter("username", username);
+			query.setParameter(USERNAME, username);
 			Driver driver = query.getSingleResult();
 
 			List<Ride> rides = driver.getCreatedRides();
@@ -658,27 +694,11 @@ public class DataAccess {
 	public void cancelRide(Ride ride) {
 		try {
 			db.getTransaction().begin();
-
 			for (Booking booking : ride.getBookings()) {
-				if (booking.getStatus().equals("Accepted") || booking.getStatus().equals("NotDefined")) {
-					double price = booking.prezioaKalkulatu();
-					Traveler traveler = booking.getTraveler();
-					double frozenMoney = traveler.getIzoztatutakoDirua();
-					traveler.setIzoztatutakoDirua(frozenMoney - price);
-
-					double money = traveler.getMoney();
-					traveler.setMoney(money + price);
-					db.merge(traveler);
-					db.getTransaction().commit();
-					addMovement(traveler, "BookDeny", price);
-					db.getTransaction().begin();
-				}
-				booking.setStatus(R);
-				db.merge(booking);
+				diruaItzuli(booking);
 			}
 			ride.setActive(false);
 			db.merge(ride);
-
 			db.getTransaction().commit();
 		} catch (Exception e) {
 			if (db.getTransaction().isActive()) {
@@ -687,24 +707,37 @@ public class DataAccess {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * This is a helping method
+	 * @param booking 
+	 */
+	public void diruaItzuli(Booking booking) {
+		if (booking.getStatus().equals(A) || booking.getStatus().equals("NotDefined")) {
+				double price = booking.prezioaKalkulatu();
+				Traveler traveler = booking.getTraveler();
+				double frozenMoney = traveler.getIzoztatutakoDirua();
+				traveler.setIzoztatutakoDirua(frozenMoney - price);
+				double money = traveler.getMoney();
+				traveler.setMoney(money + price);
+				db.merge(traveler);
+				db.getTransaction().commit();
+				addMovement(traveler, "BookDeny", price);
+				db.getTransaction().begin();
+			}
+			booking.setStatus(R);
+			db.merge(booking);
+		}
+
 
 	public List<Ride> getRidesByDriver(String username) {
 		try {
 			db.getTransaction().begin();
 			TypedQuery<Driver> query = db.createQuery("SELECT d FROM Driver d WHERE d.username = :username",
 					Driver.class);
-			query.setParameter("username", username);
+			query.setParameter(USERNAME, username);
 			Driver driver = query.getSingleResult();
-
-			List<Ride> rides = driver.getCreatedRides();
-			List<Ride> activeRides = new ArrayList<>();
-
-			for (Ride ride : rides) {
-				if (ride.isActive()) {
-					activeRides.add(ride);
-				}
-			}
-
+			List<Ride> activeRides = getActiveRides(driver);
 			db.getTransaction().commit();
 			return activeRides;
 		} catch (Exception e) {
@@ -713,6 +746,18 @@ public class DataAccess {
 			return null;
 		}
 	}
+
+	public List<Ride> getActiveRides (Driver driver) {
+		List<Ride> rides = driver.getCreatedRides();
+		List<Ride> activeRides = new ArrayList<>();
+		for (Ride ride : rides) {
+			if (ride.isActive()) {
+				activeRides.add(ride);
+			}
+		}
+		return activeRides;
+	}
+
 
 	public boolean addCar(String username, Car kotxe) {
 		try {
@@ -861,34 +906,9 @@ public class DataAccess {
 	public void deleteUser(User us) {
 		try {
 			if (us.getMota().equals("Driver")) {
-				List<Ride> rl = getRidesByDriver(us.getUsername());
-				if (rl != null) {
-					for (Ride ri : rl) {
-						cancelRide(ri);
-					}
-				}
-				Driver d = getDriver(us.getUsername());
-				List<Car> cl = d.getCars();
-				if (cl != null) {
-					for (int i = cl.size() - 1; i >= 0; i--) {
-						Car ci = cl.get(i);
-						deleteCar(ci);
-					}
-				}
+				deleteDriver(us);
 			} else {
-				List<Booking> lb = getBookedRides(us.getUsername());
-				if (lb != null) {
-					for (Booking li : lb) {
-						li.setStatus(R);
-						li.getRide().setnPlaces(li.getRide().getnPlaces() + li.getSeats());
-					}
-				}
-				List<Alert> la = getAlertsByUsername(us.getUsername());
-				if (la != null) {
-					for (Alert lx : la) {
-						deleteAlert(lx.getAlertNumber());
-					}
-				}
+				deleteTraveler(us);
 			}
 			db.getTransaction().begin();
 			us = db.merge(us);
@@ -899,13 +919,47 @@ public class DataAccess {
 		}
 	}
 
+	private void deleteTraveler(User us) {
+		List<Booking> lb = getBookedRides(us.getUsername());
+		if (lb != null) {
+			for (Booking li : lb) {
+				li.setStatus("Rejected");
+				li.getRide().setnPlaces(li.getRide().getnPlaces() + li.getSeats());
+			}
+		}
+		List<Alert> la = getAlertsByUsername(us.getUsername());
+		if (la != null) {
+			for (Alert lx : la) {
+				deleteAlert(lx.getAlertNumber());
+			}
+		}
+	}
+
+	private void deleteDriver(User us) {
+		List<Ride> rl = getRidesByDriver(us.getUsername());
+		if (rl != null) {
+			for (Ride ri : rl) {
+				cancelRide(ri);
+			}
+		}
+		Driver d = getDriver(us.getUsername());
+		List<Car> cl = d.getCars();
+		if (cl != null) {
+			for (int i = cl.size() - 1; i >= 0; i--) {
+				Car ci = cl.get(i);
+				deleteCar(ci);
+			}
+		}
+	}
+
+
 	public List<Alert> getAlertsByUsername(String username) {
 		try {
 			db.getTransaction().begin();
 
 			TypedQuery<Alert> query = db.createQuery("SELECT a FROM Alert a WHERE a.traveler.username = :username",
 					Alert.class);
-			query.setParameter("username", username);
+			query.setParameter(USERNAME, username);
 			List<Alert> alerts = query.getResultList();
 
 			db.getTransaction().commit();
@@ -953,31 +1007,14 @@ public class DataAccess {
 			boolean alertFound = false;
 			TypedQuery<Alert> alertQuery = db.createQuery("SELECT a FROM Alert a WHERE a.traveler.username = :username",
 					Alert.class);
-			alertQuery.setParameter("username", username);
+			alertQuery.setParameter(USERNAME, username);
 			List<Alert> alerts = alertQuery.getResultList();
 
 			TypedQuery<Ride> rideQuery = db
 					.createQuery("SELECT r FROM Ride r WHERE r.date > CURRENT_DATE AND r.active = true", Ride.class);
 			List<Ride> rides = rideQuery.getResultList();
-
-			for (Alert alert : alerts) {
-				boolean found = false;
-				for (Ride ride : rides) {
-					if (UtilDate.datesAreEqualIgnoringTime(ride.getDate(), alert.getDate())
-							&& ride.getFrom().equals(alert.getFrom()) && ride.getTo().equals(alert.getTo())
-							&& ride.getnPlaces() > 0) {
-						alert.setFound(true);
-						found = true;
-						if (alert.isActive())
-							alertFound = true;
-						break;
-					}
-				}
-				if (!found) {
-					alert.setFound(false);
-				}
-				db.merge(alert);
-			}
+			
+			alertFound = processAlerts(alerts, rides);
 
 			db.getTransaction().commit();
 			return alertFound;
@@ -987,6 +1024,39 @@ public class DataAccess {
 			return false;
 		}
 	}
+
+	private boolean processAlerts(List<Alert> alerts, List<Ride> rides) {
+		boolean alertFound = false;
+
+	    for (Alert alert : alerts) {
+	        boolean found = findMatchingRide(alert, rides);
+	        
+	        if (!found) {
+	            alert.setFound(false);
+	        }
+
+	        db.merge(alert);
+
+	        if (found && alert.isActive()) {
+	            alertFound = true;
+	        }
+	    }
+
+	    return alertFound;
+	}
+	private boolean findMatchingRide(Alert alert, List<Ride> rides) {
+		for (Ride ride : rides) {
+	        if (UtilDate.datesAreEqualIgnoringTime(ride.getDate(), alert.getDate()) &&
+	                ride.getFrom().equals(alert.getFrom()) &&
+	                ride.getTo().equals(alert.getTo()) &&
+	                ride.getnPlaces() > 0) {
+	            alert.setFound(true);
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+
 
 	public boolean createAlert(Alert alert) {
 		try {

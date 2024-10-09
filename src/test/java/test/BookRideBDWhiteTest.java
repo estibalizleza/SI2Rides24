@@ -23,7 +23,7 @@ import testOperations.TestDataAccess;
 
 public class BookRideBDWhiteTest {
 	// sut:system under test
-	/**static DataAccess sut = new DataAccess();
+	static DataAccess sut = new DataAccess();
 
 	// additional operations needed to execute the test
 	static TestDataAccess testDA = new TestDataAccess();
@@ -231,5 +231,5 @@ public class BookRideBDWhiteTest {
 		testDA.removeTraveler("Ane02");
 		testDA.removeTraveler("Maddi05");
 		testDA.close();
-	}**/
+	}
 }
