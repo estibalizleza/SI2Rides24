@@ -31,7 +31,7 @@ import domain.Ride;
 import domain.Traveler;
 
 public class BookRideBDMockWhiteTest {
-	static DataAccess sut;
+	/**static DataAccess sut;
 
 	protected MockedStatic<Persistence> persistenceMock;
 
@@ -287,5 +287,5 @@ public class BookRideBDMockWhiteTest {
 	public void tearDown() {
 		persistenceMock.close();
 
-	}
+	}**/
 }
