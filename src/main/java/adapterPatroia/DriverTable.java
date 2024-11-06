@@ -22,6 +22,6 @@ tabla.setPreferredScrollableViewportSize(new Dimension(500,	70));
 //Creamos un JscrollPane	y	le agregamos la JTable
 JScrollPane	scrollPane =	new JScrollPane(tabla);
 //Agregamos el	JScrollPane	al contenedor
-getContentPane().add(scrollPane,	BorderLayout.CENTER);
+getContentPane().add(scrollPane,	BorderLayout.CENTER); 
 } 
 }
