@@ -13,6 +13,8 @@ import domain.Driver;
 import domain.Complaint;
 import domain.Movement;
 import exceptions.RideMustBeLaterThanTodayException;
+import iterator.ExtendedIterator;
+import iterator.ExtendedIteratorCities;
 import exceptions.RideAlreadyExistException;
 
 import javax.jws.WebMethod;
@@ -41,6 +43,8 @@ public interface BLFacade {
 	 */
 	@WebMethod
 	public List<String> getDestinationCities(String from);
+	
+	public ExtendedIterator<String> getDepartCitiesIterator();
 
 	/**
 	 * This method creates a ride for a driver
@@ -174,5 +178,6 @@ public interface BLFacade {
 	public boolean deleteAlert(int alertNumber);
 
 	public Complaint getComplaintsByBook(Booking bo);
+	
 
 }

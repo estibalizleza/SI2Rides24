@@ -20,6 +20,8 @@ import domain.Driver;
 import domain.Complaint;
 import domain.Movement;
 import exceptions.RideMustBeLaterThanTodayException;
+import iterator.ExtendedIterator;
+import iterator.ExtendedIteratorCities;
 import exceptions.RideAlreadyExistException;
 import java.util.logging.Logger;
 
@@ -31,7 +33,7 @@ public class BLFacadeImplementation implements BLFacade {
 	DataAccess dbManager;
 	Logger logger = Logger.getLogger(BLFacadeImplementation.class.getName());
 
-	public BLFacadeImplementation() {
+	public BLFacadeImplementation( ) {
 		logger.info("Creating BLFacadeImplementation instance");
 
 		dbManager = new DataAccess();
@@ -63,6 +65,14 @@ public class BLFacadeImplementation implements BLFacade {
 		return departLocations;
 
 	}
+	
+	
+	public ExtendedIterator<String> getDepartCitiesIterator(){
+		dbManager.open();
+	    List<String> departLocations = dbManager.getDepartCities();
+	    dbManager.close();
+	    return new ExtendedIteratorCities(departLocations);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -77,6 +87,8 @@ public class BLFacadeImplementation implements BLFacade {
 
 		return targetCities;
 	}
+	
+	
 
 	/**
 	 * {@inheritDoc}
