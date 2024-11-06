@@ -1,16 +1,10 @@
 package gui;
 
-import java.net.URL;
 import java.util.Locale;
 
-import javax.swing.UIManager;
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
-
 import businesslogic.BLFacade;
-import businesslogic.BLFacadeImplementation;
+import businesslogic.BLFactory;
 import configuration.ConfigXML;
-import data_access.DataAccess;
 
 public class ApplicationLauncher {
 
@@ -25,33 +19,8 @@ public class ApplicationLauncher {
 		System.out.println("Locale: " + Locale.getDefault());
 
 		try {
-
-			BLFacade appFacadeInterface;
-			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-
-			if (c.isBusinessLogicLocal()) {
-
-				DataAccess da = new DataAccess();
-				appFacadeInterface = new BLFacadeImplementation(da);
-
-			}
-
-			else { // If remote
-
-				String serviceName = "http://" + c.getBusinessLogicNode() + ":" + c.getBusinessLogicPort() + "/ws/"
-						+ c.getBusinessLogicName() + "?wsdl";
-
-				URL url = new URL(serviceName);
-
-				// 1st argument refers to wsdl document above
-				// 2nd argument is service name, refer to wsdl document above
-				QName qname = new QName("http://businessLogic/", "BLFacadeImplementationService");
-
-				Service service = Service.create(url, qname);
-
-				appFacadeInterface = service.getPort(BLFacade.class);
-			}
-
+			boolean isLocal = c.isBusinessLogicLocal();
+			BLFacade appFacadeInterface = new BLFactory().getBusinessLogicFactory(isLocal);
 			MainGUI.setBussinessLogic(appFacadeInterface);
 			MainGUI a = new MainGUI();
 			a.setVisible(true);

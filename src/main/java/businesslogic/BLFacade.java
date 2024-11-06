@@ -1,9 +1,7 @@
 package businesslogic;
 
 import java.util.Date;
-
 import java.util.List;
-
 import domain.Ride;
 import domain.Traveler;
 import domain.User;
